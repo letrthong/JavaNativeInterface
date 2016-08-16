@@ -12,7 +12,16 @@ extern "C" {
  * Method:    printGreeting
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_Hello_printGreeting(JNIEnv *, jobject);
+JNIEXPORT void JNICALL Java_Hello_printGreeting
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     Hello
+ * Method:    sum
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_Hello_sum
+  (JNIEnv *, jobject, jint, jint);
 
 #ifdef __cplusplus
 }

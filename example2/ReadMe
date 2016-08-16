@@ -1,0 +1,31 @@
+avaTM cannot do it all. Sometimes you need to write system-specific code. This can be done use JNI (Java Native Interface). It allows your Java programs to use functions written in C. Here's the way I got it to work under Linux.
+
+Write your java program
+class Hello {
+
+  public native void printGreeting();
+
+  static {
+    System.loadLibrary("hello");
+  }
+
+  public static void main(String[] args) {
+    Hello hello = new Hello();
+    hello.printGreeting();
+  }
+}
+Compile it (javac Hello.java)
+Generate the C header, Hello.h (javah Hello)
+Using the prototype in the header file, create the C file, Hello.c
+#include "Hello.h"
+#include <stdio.h>
+
+JNIEXPORT void JNICALL Java_Hello_printGreeting(JNIEnv *env, jobject obj) {
+  printf("Hello World\n");
+}
+Generate a shared library
+gcc -o libhello.so -shared -Wl,-soname,libhello.so -I/usr/local/java/include -I/usr/local/java/include/linux Hello.c -static -lc
+Set your library path (setenv LD_LIBRARY_PATH $LD_LIBRARY_PATH:. or whatever is appropriate for your shell/system)
+Run (java Hello)
+
+#http://cs.baylor.edu/~donahoo/tools/nativejava/
